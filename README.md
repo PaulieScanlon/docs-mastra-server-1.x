@@ -21,9 +21,7 @@ Server adapters automatically register standardized Mastra API endpoints (agents
 **Key difference:**
 - **Server adapters**: Call API endpoints (e.g., `POST /api/agents/weatherAgent/generate`) via HTTP requests
 - **Direct integration**: Call Mastra methods directly in your code (e.g., `agent.generate()`)
-
-
-- [Integrate Mastra in your Express project](https://mastra-docs-1-kz4642mbs-kepler-ab1bf5ab.vercel.app/guides/v1/getting-started/express)
+  - [Integrate Mastra in your Express project](https://mastra-docs-1-kz4642mbs-kepler-ab1bf5ab.vercel.app/guides/v1/getting-started/express)
 
 ---
 
