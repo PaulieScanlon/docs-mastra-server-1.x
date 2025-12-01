@@ -126,13 +126,7 @@ console.log(result);
 
 The OpenAPI documentation at `/api/openapi.json` shows all available endpoints for agents, workflows, tools, and other Mastra features.
 
----
+## PR References
 
-## Build Output
-
-The `.mastra` directory is Mastra's build output directory. It contains:
-- Compiled/generated files from `mastra build`
-- Database files (when using file-based storage)
-- Other build artifacts
-
-This directory is automatically ignored in `.gitignore` and is created when you run Mastra commands like `mastra dev` or `mastra build`. Paths referenced in your code (like database URLs) are relative to `.mastra/output`.
+- [Server adapters](https://github.com/mastra-ai/mastra/pull/10263)
+- [Unified MastraServer API with MCP transport routes](https://github.com/mastra-ai/mastra/pull/10644)
