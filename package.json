@@ -4,14 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "mastra dev",
     "build": "mastra build",
     "start": "mastra start",
-    "start:express-ts": "tsx src/express-server.ts",
-    "start:express-js": "node src/express-server.js",
-    "start:hono-ts": "tsx src/hono-server.ts",
-    "start:hono-js": "node src/hono-server.js"
+    "start:express": "tsx src/express-server.ts"
   },
   "keywords": [],
   "author": "",
@@ -21,25 +17,25 @@
     "node": ">=22.13.0"
   },
   "dependencies": {
-    "@mastra/core": "^1.0.0-beta.6",
-    "@mastra/evals": "^1.0.0-beta.2",
-    "@mastra/express": "^0.0.2-beta.1",
-    "@mastra/hono": "^0.0.2-beta.1",
-    "@mastra/libsql": "^1.0.0-beta.3",
-    "@mastra/loggers": "^1.0.0-beta.1",
-    "@mastra/memory": "^1.0.0-beta.3",
-    "@mastra/observability": "^1.0.0-beta.2",
-    "@mastra/server": "^1.0.0-beta.6",
+    "@mastra/core": "1.0.0-beta.6",
+    "@mastra/evals": "1.0.0-beta.2",
+    "@mastra/express": "0.0.2-beta.1",
+    "@mastra/hono": "0.0.2-beta.1",
+    "@mastra/libsql": "1.0.0-beta.3",
+    "@mastra/loggers": "1.0.0-beta.1",
+    "@mastra/memory": "1.0.0-beta.3",
+    "@mastra/observability": "1.0.0-beta.2",
+    "@mastra/server": "1.0.0-beta.6",
     "@hono/node-server": "^1.19.6",
-    "express": "^5.1.0",
+    "express": "^4.21.2",
     "hono": "^4.10.4",
     "zod": "^4.1.13"
   },
   "devDependencies": {
-    "@types/express": "^5.0.5",
+    "@types/express": "^4.17.21",
     "@types/node": "^24.10.1",
     "dotenv": "^16.4.5",
-    "mastra": "^1.0.0-beta.5",
+    "mastra": "1.0.0-beta.5",
     "tsx": "^4.19.2",
     "typescript": "^5.9.3"
   }
