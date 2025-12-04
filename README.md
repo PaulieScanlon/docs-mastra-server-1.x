@@ -1,12 +1,12 @@
 # Server Adapter Packages
 
 ## Express Adapter
-- `@mastra/server-adapters-express@beta`
+- `@mastra/express@beta`
 - `@mastra/server@beta`
 - `express`
 
 ## Hono Adapter
-- `@mastra/server-adapters-hono@beta`
+- `@mastra/hono@beta`
 - `@mastra/server@beta`
 - `hono`
 
@@ -32,44 +32,49 @@ Server adapters automatically register standardized Mastra API endpoints (agents
 `src/server.ts`
 
 ```typescript
-import express from 'express';
-import { MastraServer } from '@mastra/server-adapters-express';
-// import { mastra } from '.mastra/output/index'; // TBD: Likely from build output to avoid bundling issues, or './mastra/index' if importing source
+import { Mastra } from "@mastra/core";
+import { Agent } from "@mastra/core/agent";
+import express from "express";
+import { MastraServer } from "@mastra/express";
+
+const testAgent = new Agent({
+  id: "test-agent",
+  name: "Test Agent",
+  instructions: "You are a helpful assistant.",
+  model: "openai/gpt-5.1",
+});
+
+const mastra = new Mastra({
+  agents: { testAgent },
+});
 
 const app = express();
 app.use(express.json());
 
-// Create and initialize Mastra server
-// This automatically registers all endpoints for agents, workflows, tools, memory, logs, observability, MCP, and A2A
-const server = new MastraServer({
-  app,
-  mastra,
-  openapiPath: '/api/openapi.json',
-});
-
+const server = new MastraServer({ mastra, app });
 await server.init();
 
 app.listen(3000, () => {
-  console.log('Server running on http://localhost:3000');
+  console.log("Server running on port 3000");
 });
 ```
 
-No need to manually add routes - the adapter automatically registers all endpoints. Once the server is running, you can call the agent endpoints. For example, to invoke the `weatherAgent`:
+The adapter automatically registers all endpoints for agents, workflows, tools, memory, logs, observability, MCP, and A2A. Once the server is running, you can call the agent endpoints. For example, to invoke the `test-agent`:
 
 ```bash
-curl -X POST http://localhost:3000/api/agents/weatherAgent/generate \
+curl -X POST http://localhost:3000/api/agents/test-agent/generate \
   -H "Content-Type: application/json" \
-  -d '{"messages": [{"role": "user", "content": "What is the weather in London?"}]}'
+  -d '{"messages": [{"role": "user", "content": "Hello, how are you?"}]}'
 ```
 
 Or from JavaScript/TypeScript:
 
 ```typescript
-const response = await fetch('http://localhost:3000/api/agents/weatherAgent/generate', {
+const response = await fetch('http://localhost:3000/api/agents/test-agent/generate', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    messages: [{ role: 'user', content: 'What is the weather in London?' }]
+    messages: [{ role: 'user', content: 'Hello, how are you?' }]
   })
 });
 
@@ -82,41 +87,49 @@ console.log(result);
 `src/index.ts`
 
 ```typescript
-import { Hono } from 'hono';
-import { MastraServer } from '@mastra/server-adapters-hono';
-// import { mastra } from '.mastra/output/index'; // TBD: Likely from build output to avoid bundling issues, or './mastra/index' if importing source
+import { Mastra } from "@mastra/core";
+import { Agent } from "@mastra/core/agent";
+import { Hono } from "hono";
+import { serve } from "@hono/node-server";
+import { MastraServer } from "@mastra/hono";
+
+const testAgent = new Agent({
+  id: "test-agent",
+  name: "Test Agent",
+  instructions: "You are a helpful assistant.",
+  model: "openai/gpt-5.1",
+});
+
+const mastra = new Mastra({
+  agents: { testAgent },
+});
 
 const app = new Hono();
 
-// Create and initialize Mastra server
-// This automatically registers all endpoints for agents, workflows, tools, memory, logs, observability, MCP, and A2A
-const server = new MastraServer({
-  app,
-  mastra,
-  openapiPath: '/api/openapi.json',
-});
-
+const server = new MastraServer({ mastra, app });
 await server.init();
 
-export default app;
+serve({ fetch: app.fetch, port: 3000 }, () => {
+  console.log("Server running on port 3000");
+});
 ```
 
-No need to manually add routes - the adapter automatically registers all endpoints. Once the server is running, you can call the agent endpoints. For example, to invoke the `weatherAgent`:
+The adapter automatically registers all endpoints for agents, workflows, tools, memory, logs, observability, MCP, and A2A. Once the server is running, you can call the agent endpoints. For example, to invoke the `test-agent`:
 
 ```bash
-curl -X POST http://localhost:3000/api/agents/weatherAgent/generate \
+curl -X POST http://localhost:3000/api/agents/test-agent/generate \
   -H "Content-Type: application/json" \
-  -d '{"messages": [{"role": "user", "content": "What is the weather in London?"}]}'
+  -d '{"messages": [{"role": "user", "content": "Hello, how are you?"}]}'
 ```
 
 Or from JavaScript/TypeScript:
 
 ```typescript
-const response = await fetch('http://localhost:3000/api/agents/weatherAgent/generate', {
+const response = await fetch('http://localhost:3000/api/agents/test-agent/generate', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    messages: [{ role: 'user', content: 'What is the weather in London?' }]
+    messages: [{ role: 'user', content: 'Hello, how are you?' }]
   })
 });
 
