@@ -32,21 +32,10 @@ Server adapters automatically register standardized Mastra API endpoints (agents
 `src/server.ts`
 
 ```typescript
-import { Mastra } from "@mastra/core";
-import { Agent } from "@mastra/core/agent";
+import "dotenv/config";
 import express from "express";
 import { MastraServer } from "@mastra/express";
-
-const testAgent = new Agent({
-  id: "test-agent",
-  name: "Test Agent",
-  instructions: "You are a helpful assistant.",
-  model: "openai/gpt-5.1",
-});
-
-const mastra = new Mastra({
-  agents: { testAgent },
-});
+import { mastra } from "./mastra/index"; // Import your existing Mastra instance
 
 const app = express();
 app.use(express.json());
@@ -59,22 +48,24 @@ app.listen(3000, () => {
 });
 ```
 
-The adapter automatically registers all endpoints for agents, workflows, tools, memory, logs, observability, MCP, and A2A. Once the server is running, you can call the agent endpoints. For example, to invoke the `test-agent`:
+**Note:** The `mastra` instance is imported from your existing Mastra configuration (`src/mastra/index.ts`), which includes all your agents, workflows, tools, storage, logging, and observability setup.
+
+The adapter automatically registers all endpoints for agents, workflows, tools, memory, logs, observability, MCP, and A2A. Once the server is running, you can call the agent endpoints. For example, to invoke the `weatherAgent` (defined in `src/mastra/agents/weather-agent.ts`):
 
 ```bash
-curl -X POST http://localhost:3000/api/agents/test-agent/generate \
+curl -X POST http://localhost:3000/api/agents/weatherAgent/generate \
   -H "Content-Type: application/json" \
-  -d '{"messages": [{"role": "user", "content": "Hello, how are you?"}]}'
+  -d '{"messages": [{"role": "user", "content": "What is the weather in London?"}]}'
 ```
 
 Or from JavaScript/TypeScript:
 
 ```typescript
-const response = await fetch('http://localhost:3000/api/agents/test-agent/generate', {
+const response = await fetch('http://localhost:3000/api/agents/weatherAgent/generate', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    messages: [{ role: 'user', content: 'Hello, how are you?' }]
+    messages: [{ role: 'user', content: 'What is the weather in London?' }]
   })
 });
 
@@ -87,22 +78,11 @@ console.log(result);
 `src/index.ts`
 
 ```typescript
-import { Mastra } from "@mastra/core";
-import { Agent } from "@mastra/core/agent";
+import "dotenv/config";
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
 import { MastraServer } from "@mastra/hono";
-
-const testAgent = new Agent({
-  id: "test-agent",
-  name: "Test Agent",
-  instructions: "You are a helpful assistant.",
-  model: "openai/gpt-5.1",
-});
-
-const mastra = new Mastra({
-  agents: { testAgent },
-});
+import { mastra } from "./mastra/index"; // Import your existing Mastra instance
 
 const app = new Hono();
 
@@ -114,22 +94,24 @@ serve({ fetch: app.fetch, port: 3000 }, () => {
 });
 ```
 
-The adapter automatically registers all endpoints for agents, workflows, tools, memory, logs, observability, MCP, and A2A. Once the server is running, you can call the agent endpoints. For example, to invoke the `test-agent`:
+**Note:** The `mastra` instance is imported from your existing Mastra configuration (`src/mastra/index.ts`), which includes all your agents, workflows, tools, storage, logging, and observability setup.
+
+The adapter automatically registers all endpoints for agents, workflows, tools, memory, logs, observability, MCP, and A2A. Once the server is running, you can call the agent endpoints. For example, to invoke the `weatherAgent` (defined in `src/mastra/agents/weather-agent.ts`):
 
 ```bash
-curl -X POST http://localhost:3000/api/agents/test-agent/generate \
+curl -X POST http://localhost:3000/api/agents/weatherAgent/generate \
   -H "Content-Type: application/json" \
-  -d '{"messages": [{"role": "user", "content": "Hello, how are you?"}]}'
+  -d '{"messages": [{"role": "user", "content": "What is the weather in London?"}]}'
 ```
 
 Or from JavaScript/TypeScript:
 
 ```typescript
-const response = await fetch('http://localhost:3000/api/agents/test-agent/generate', {
+const response = await fetch('http://localhost:3000/api/agents/weatherAgent/generate', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    messages: [{ role: 'user', content: 'Hello, how are you?' }]
+    messages: [{ role: 'user', content: 'What is the weather in London?' }]
   })
 });
 
@@ -138,6 +120,20 @@ console.log(result);
 ```
 
 The OpenAPI documentation at `/api/openapi.json` shows all available endpoints for agents, workflows, tools, and other Mastra features.
+
+## Mastra Configuration
+
+Your Mastra instance is configured in `src/mastra/index.ts` and includes:
+
+- **Agents**: Defined in `src/mastra/agents/` (e.g., `weatherAgent`)
+- **Workflows**: Defined in `src/mastra/workflows/` (e.g., `weatherWorkflow`)
+- **Tools**: Defined in `src/mastra/tools/` (e.g., `weatherTool`)
+- **Scorers**: Defined in `src/mastra/scorers/` for evaluating agent performance
+- **Storage**: LibSQL for observability, scores, and other data
+- **Logger**: Pino logger for structured logging
+- **Observability**: Mastra observability with tracing support
+
+The server adapters automatically expose all these configured components via REST API endpoints.
 
 ## PR References
 
