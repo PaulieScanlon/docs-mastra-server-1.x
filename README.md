@@ -68,22 +68,8 @@ See [ISSUE.md](./ISSUE.md) for full details.
 - ✅ OpenAPI endpoints work
 - ✅ Server initializes without errors
 
-### Root Cause
-The `abortSignal` in `res.locals.abortSignal` is already aborted when the handler executes, causing all OpenAI API calls to be immediately canceled.
-
-### Temporary Workaround
-Manual endpoint implementation works but loses other Mastra endpoints:
-
-```typescript
-app.post('/api/agents/:agentId/generate', async (req, res) => {
-  const agent = mastra.getAgentById(req.params.agentId);
-  const { messages, ...options } = req.body;
-  const result = await agent.generate(messages, options);
-  res.json(result);
-});
-```
-
-**Recommendation:** Use `npm run dev` (mastra dev server) until this is fixed in the next beta release.
+### Observations
+When passing `res.locals.abortSignal` to `agent.generate()`, it returns empty responses. The signal shows as already aborted.
 
 ---
 
