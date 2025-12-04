@@ -16,7 +16,7 @@
 
 Server adapters automatically register standardized Mastra API endpoints (agents, workflows, tools, memory, logs, observability, MCP, and A2A endpoints) on your Express or Hono server. This provides a complete REST API for all Mastra features with OpenAPI documentation.
 
-With server adapters, you interact with Mastra via HTTP requests (e.g., `POST /api/agents/weatherAgent/generate`) rather than calling methods directly in your code (e.g., `agent.generate()`).
+With server adapters, you interact with Mastra via HTTP requests (e.g., `POST /api/agents/weather-agent/generate`) rather than calling methods directly in your code (e.g., `agent.generate()`).
 
 ---
 
@@ -99,7 +99,7 @@ Should return actual weather data.
 ```bash
 npm run dev
 # In another terminal:
-curl -X POST http://localhost:3001/api/agents/weatherAgent/generate \
+curl -X POST http://localhost:3001/api/agents/weather-agent/generate \
   -H "Content-Type: application/json" \
   -d '{"messages":[{"role":"user","content":"What is the weather in Paris?"}]}'
 ```
