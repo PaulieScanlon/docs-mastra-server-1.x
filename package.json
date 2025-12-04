@@ -8,8 +8,10 @@
     "dev": "mastra dev",
     "build": "mastra build",
     "start": "mastra start",
-    "test:express": "tsx src/express-server.ts",
-    "test:hono": "tsx src/hono-server.ts"
+    "start:express-ts": "tsx src/express-server.ts",
+    "start:express-js": "node src/express-server.js",
+    "start:hono-ts": "tsx src/hono-server.ts",
+    "start:hono-js": "node src/hono-server.js"
   },
   "keywords": [],
   "author": "",

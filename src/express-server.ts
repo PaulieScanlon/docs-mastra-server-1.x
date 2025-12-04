@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import { MastraServer } from "@mastra/express";
-import { mastra } from "./mastra/index";
+import { mastra } from "./mastra/index"; // From TypeScript source
 
 const app = express();
 app.use(express.json());

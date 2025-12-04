@@ -1,20 +1,21 @@
 import "dotenv/config";
-import { Hono } from "hono";
-import { serve } from "@hono/node-server";
-import { MastraServer } from "@mastra/hono";
-import { mastra } from "./mastra/index"; // From TypeScript source
+import express from "express";
+import { MastraServer } from "@mastra/express";
+// Import from the compiled JavaScript output instead of TypeScript source
+import { mastra } from "../.mastra/output/index.js";
 
-const app = new Hono();
+const app = express();
+app.use(express.json());
 
-console.log("Initializing MastraServer with Hono...");
+console.log("Initializing MastraServer with Express...");
 const server = new MastraServer({ mastra, app });
 await server.init();
 console.log("MastraServer initialized");
 
-const PORT = 3002;
+const PORT = 3001;
 
-serve({ fetch: app.fetch, port: PORT }, () => {
-  console.log(`\nHono server running on http://localhost:${PORT}`);
+app.listen(PORT, () => {
+  console.log(`\nExpress server running on http://localhost:${PORT}`);
   console.log(`\nTest the weatherAgent:`);
   console.log(`  curl -X POST http://localhost:${PORT}/api/agents/weatherAgent/generate \\`);
   console.log(`    -H 'Content-Type: application/json' \\`);

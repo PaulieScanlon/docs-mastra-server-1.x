@@ -2,7 +2,8 @@ import "dotenv/config";
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
 import { MastraServer } from "@mastra/hono";
-import { mastra } from "./mastra/index"; // From TypeScript source
+// Import from the compiled JavaScript output instead of TypeScript source
+import { mastra } from "../.mastra/output/index.js";
 
 const app = new Hono();
 
