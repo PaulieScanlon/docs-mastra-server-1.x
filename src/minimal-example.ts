@@ -30,7 +30,12 @@ const server = new MastraServer({
 // Initialize - registers context middleware, auth middleware, and routes
 await server.init();
 
+// Get the app instance from the server (as per docs)
+const serverApp = server.getApp();
+
 // Start server
-app.listen(3001, () => {
+serverApp.listen(3001, () => {
   console.log('Server running on http://localhost:3001');
+  console.log('Test: curl -X POST http://localhost:3001/api/agents/test-agent/generate -H "Content-Type: application/json" -d \'{"messages":[{"role":"user","content":"Say hello"}]}\'');
 });
+

@@ -99,7 +99,7 @@ Should return actual weather data.
 ```bash
 npm run dev
 # In another terminal:
-curl -X POST http://localhost:4112/api/agents/weather-agent/generate \
+curl -X POST http://localhost:3001/api/agents/weatherAgent/generate \
   -H "Content-Type: application/json" \
   -d '{"messages":[{"role":"user","content":"What is the weather in Paris?"}]}'
 ```
@@ -110,10 +110,6 @@ Should return actual weather data with text and token usage.
 
 ```bash
 npm run start:express
-# In another terminal:
-curl -X POST http://localhost:3001/api/agents/weather-agent/generate \
-  -H "Content-Type: application/json" \
-  -d '{"messages":[{"role":"user","content":"What is the weather in Paris?"}]}'
 ```
 
 Currently returns empty text and 0 tokens (see ISSUE.md for details).
