@@ -35,14 +35,17 @@ import { mastra } from "./mastra/index.js";
 const app = express();
 app.use(express.json());
 
-const expressServerAdapter = new MastraServer({
+const server = new MastraServer({
   mastra,
   app,
   openapiPath: '/openapi.json'
 });
-await expressServerAdapter.init();
+await server.init();
 
-app.listen(3001, () => {
+// Get the app instance from the server
+const serverApp = server.getApp();
+
+serverApp.listen(3001, () => {
   console.log('Server is running on port 3001');
   console.log('OpenAPI spec: http://localhost:3001/openapi.json');
 });
