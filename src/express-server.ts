@@ -7,16 +7,18 @@ const app = express();
 app.use(express.json());
 
 const server = new MastraServer({
-  mastra,
   app,
+  mastra,
   openapiPath: '/openapi.json'
 });
 await server.init();
 
-// Get the app instance from the server
-const serverApp = server.getApp();
+// Test route
+app.get('/', (req, res) => {
+  res.json({ message: 'Hello World', status: 'ok' });
+});
 
-serverApp.listen(3001, () => {
-  console.log('Server is running on port 3001');
-  console.log('OpenAPI spec: http://localhost:3001/openapi.json');
+app.listen(3001, () => {
+  console.log('Server running on port 3001');
+  console.log('Test route: http://localhost:3001');
 });

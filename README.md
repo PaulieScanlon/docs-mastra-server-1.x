@@ -24,34 +24,74 @@ With server adapters, you interact with Mastra via HTTP requests (e.g., `POST /a
 
 ### Express adapter
 
+Server adapters let you use your own HTTP server instead of `mastra build`. You import your Mastra instance from source and use `tsx` to run TypeScript directly.
+
+**Note:** `mastra build` creates a standalone server, not a module to import. Adapters are for when you want full control over your server setup.
+
 `src/express-server.ts`
 
 ```typescript
 import "dotenv/config";
 import express from "express";
 import { MastraServer } from "@mastra/express";
-import { mastra } from "./mastra/index.js";
+import { mastra } from "./mastra/index.js"; // From TypeScript source
 
 const app = express();
 app.use(express.json());
 
 const server = new MastraServer({
-  mastra,
   app,
+  mastra,
   openapiPath: '/openapi.json'
 });
 await server.init();
 
-// Get the app instance from the server
-const serverApp = server.getApp();
-
-serverApp.listen(3001, () => {
-  console.log('Server is running on port 3001');
-  console.log('OpenAPI spec: http://localhost:3001/openapi.json');
+app.listen(3001, () => {
+  console.log('Server running on port 3001');
 });
 ```
 
-Run with: `npm run start:express` (uses `tsx`)
+Run with: `npm run start:express`
+
+### Hono adapter
+
+Server adapters let you use your own HTTP server instead of `mastra build`. You import your Mastra instance from source and use `tsx` to run TypeScript directly.
+
+**Note:** `mastra build` creates a standalone server, not a module to import. Adapters are for when you want full control over your server setup.
+
+`src/hono-server.ts`
+
+```typescript
+import "dotenv/config";
+import { Hono } from "hono";
+import { serve } from "@hono/node-server";
+import { HonoBindings, HonoVariables, MastraServer } from "@mastra/hono";
+import { mastra } from "./mastra/index.js"; // From TypeScript source
+
+const app = new Hono<{ Bindings: HonoBindings; Variables: HonoVariables }>();
+
+const server = new MastraServer({
+  app,
+  mastra,
+  openapiPath: '/openapi.json'
+});
+await server.init();
+
+// Test route
+app.get('/', (c) => {
+  return c.json({ message: 'Hello World', status: 'ok' });
+});
+
+serve({
+  fetch: app.fetch,
+  port: 3001,
+}, () => {
+  console.log('Server running on port 3001');
+  console.log('Test route: http://localhost:3001');
+});
+```
+
+Run with: `npm run start:hono`
 
 ---
 
@@ -90,7 +130,8 @@ npm run dev
 # In another terminal:
 curl -X POST http://localhost:3001/api/agents/weather-agent/generate \
   -H "Content-Type: application/json" \
-  -d '{"messages":[{"role":"user","content":"What is the weather in Paris?"}]}'
+  -d '{"messages":[{"role":"user","content":"What is the weather in London?"}]}' \
+  | jq -r '.text'
 ```
 
 Should return actual weather data with text and token usage.

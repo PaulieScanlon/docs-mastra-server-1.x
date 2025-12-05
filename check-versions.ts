@@ -27,15 +27,21 @@ const packages = Array.from(new Set(dependencyEntries))
 for (const pkg of packages) {
   const installedSpec = getInstalledSpec(pkg);
 
-  const versionsRaw = execSync(`npm view ${pkg} versions --json`, {
-    encoding: "utf-8",
-    stdio: ["pipe", "pipe", "ignore"]
-  });
-  const versions = JSON.parse(versionsRaw);
-  const latestBeta = versions.filter((v: any) => v.includes("beta")).pop() ?? "none";
+  try {
+    const versionsRaw = execSync(`npm view ${pkg} versions --json`, {
+      encoding: "utf-8",
+      stdio: ["pipe", "pipe", "ignore"]
+    });
+    const versions = JSON.parse(versionsRaw);
+    const latestBeta = versions.filter((v: any) => v.includes("beta")).pop() ?? "none";
 
-  console.log(`${pkg}:`);
-  console.log(`  Installed:   ${installedSpec}`);
-  console.log(`  Latest Beta: ${latestBeta}`);
+    console.log(`${pkg}:`);
+    console.log(`  Installed:   ${installedSpec}`);
+    console.log(`  Latest Beta: ${latestBeta}`);
+  } catch (error) {
+    console.log(`${pkg}:`);
+    console.log(`  Installed:   ${installedSpec}`);
+    console.log(`  Latest Beta: (npm registry error)`);
+  }
   console.log("");
 }
